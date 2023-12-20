@@ -6,7 +6,6 @@ from train import Train
 from face_recognition import Face_recognition
 from attendance import Attendance
 
-
 class Face_Recognition_System:
     def __init__(self, root):
         self.root = root
@@ -14,6 +13,10 @@ class Face_Recognition_System:
         self.root.title("Engineering Cycle Management")
         self.root.resizable(False, False)
 
+        # GUI setup
+        self.setup_gui()
+
+    def setup_gui(self):
         # logo
         img = Image.open(r"images/logo_fst.png")
         img = img.resize((500, 120), Image.LANCZOS)
@@ -29,8 +32,7 @@ class Face_Recognition_System:
         bg_img.place(x=0, y=130, width=1530, height=710)
 
         # Title
-        title_lbl = Label(bg_img, text="Engineering Cycle Management", font=("poppins", 35, "bold"), bg="white",
-                          fg="blue")
+        title_lbl = Label(bg_img, text="Engineering Cycle Management", font=("poppins", 35, "bold"), bg="white", fg="blue")
         title_lbl.place(x=0, y=0, width=1530, height=55)
 
         # Student Button
@@ -39,8 +41,7 @@ class Face_Recognition_System:
         self.photoimg2 = ImageTk.PhotoImage(img2)
         b1 = Button(bg_img, image=self.photoimg2, command=self.student_details, cursor="hand2")
         b1.place(x=250, y=100, width=220, height=220)
-        b1_1 = Button(bg_img, text="Student Details", command=self.student_details, cursor="hand2",
-                      font=("poppins", 15, "bold"), bg="cyan", fg="green")
+        b1_1 = Button(bg_img, text="Student Details", command=self.student_details, cursor="hand2", font=("poppins", 15, "bold"), bg="cyan", fg="green")
         b1_1.place(x=250, y=300, width=220, height=40)
 
         # Detect Face Button
@@ -108,9 +109,7 @@ class Face_Recognition_System:
         self.new_window = Toplevel(self.root)
         self.app = Attendance(self.new_window)
 
-
 if __name__ == "__main__":
     root = Tk()
     obj = Face_Recognition_System(root)
-
     root.mainloop()

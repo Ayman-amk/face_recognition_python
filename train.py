@@ -5,7 +5,6 @@ import cv2
 import os
 import numpy as np
 
-
 class Train:
     def __init__(self, root):
         self.root = root
@@ -22,27 +21,34 @@ class Train:
         title_lbl = Label(self.root, text="Train Data", font=("poppins", 35, "bold"), bg="white", fg="blue")
         title_lbl.place(x=0, y=130, width=1530, height=55)
 
-        # Button pour trainer Data
-        b1_1 = Button(self.root, text="Train Data Now", command=self.train_classifier, cursor="hand2", font=("poppins", 15, "bold"),
-                      bg="green", fg="white")
+        # Button to train Data
+        b1_1 = Button(self.root, text="Train Data Now", command=self.train_classifier, cursor="hand2",
+                      font=("poppins", 15, "bold"), bg="green", fg="white")
         b1_1.place(x=550, y=380, width=500, height=60)
 
     def train_classifier(self):
         data_dir = "data"
+        classifier_file = "classifier.xml"
+
+        if not os.path.exists(data_dir):
+            messagebox.showerror("Error", f"Data directory '{data_dir}' not found!", parent=self.root)
+            return
+
         path = [os.path.join(data_dir, file) for file in os.listdir(data_dir)]
         faces = []
         ids = []
 
         for image in path:
             try:
-                img = Image.open(image).convert('L')  # Gray scale img
-                imageNp = np.array(img, 'uint8')
-                id = int(os.path.split(image)[1].split('.')[1])
+                with Image.open(image).convert('L') as img:
+                    image_np = np.array(img, 'uint8')
+                    id = int(os.path.split(image)[1].split('.')[1])
 
-                faces.append(imageNp)
-                ids.append(id)
-                cv2.imshow("Training...", imageNp)
-                cv2.waitKey(1) == 13
+                    faces.append(image_np)
+                    ids.append(id)
+
+                    cv2.imshow("Training...", image_np)
+                    cv2.waitKey(1) == 13
             except Exception as e:
                 print(f"Error processing image {image}: {e}")
 
@@ -56,7 +62,7 @@ class Train:
             # Training
             clf = cv2.face.LBPHFaceRecognizer_create()
             clf.train(faces, ids)
-            clf.write("classifier.xml")
+            clf.write(classifier_file)
             cv2.destroyAllWindows()
             messagebox.showinfo("Results", "Training completed!", parent=self.root)
 
@@ -66,6 +72,5 @@ class Train:
 
 if __name__ == "__main__":
     root = Tk()
-    obj = (Train(root))
-
+    obj = Train(root)
     root.mainloop()
